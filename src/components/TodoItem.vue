@@ -21,6 +21,7 @@
         @keyup.esc="cancelEdit"
       />
     </div>
+    <router-link class="infor-item" :to="{name: 'item', params: {id: id}}">Chi tiết</router-link>
     <div class="remove-item" @click="removeTodo(index)">&times;</div>
   </div>
 </template>
@@ -38,9 +39,9 @@ export default {
       required: true,
     },
     checkAll: {
-        type: Boolean,
-        required: true,
-    }
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {
@@ -53,13 +54,21 @@ export default {
   },
   watch: {
     checkAll() {
-        // if (this.checkAll) {
-        //     this.completed = true
-        // } else {
-        //     this.completed = this.todo.completed
-        // }
-        this.completed = this.checkAll ? true : this.todo.completed
-    }
+      // if (this.checkAll) {
+      //     this.completed = true
+      // } else {
+      //     this.completed = this.todo.completed
+      // }
+      this.completed = this.checkAll ? true : this.todo.completed;
+    },
+  },
+  directives: {
+    focus: {
+      // định nghĩa cho directive
+      inserted: function (el) {
+        el.focus();
+      },
+    },
   },
   methods: {
     removeTodo(index) {
@@ -70,19 +79,19 @@ export default {
       this.editing = true;
     },
     doneEdit() {
-      if (this.title.trim() == '') {
+      if (this.title.trim() == "") {
         this.title = this.beforeEditCache;
       }
       this.editing = false;
-      this.$emit('finishedEdit',{
-          'index': this.index,
-          'todo': {
-              'id': this.id,
-              'title': this.title,
-              'completed': this.completed,
-              'editing': this.editing,
-          }
-      })
+      this.$emit("finishedEdit", {
+        index: this.index,
+        todo: {
+          id: this.id,
+          title: this.title,
+          completed: this.completed,
+          editing: this.editing,
+        },
+      });
     },
     cancelEdit() {
       this.title = this.beforeEditCache;

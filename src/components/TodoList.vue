@@ -135,14 +135,14 @@ export default {
       return this.todos.filter((todo) => todo.completed).length > 0;
     },
   },
-  directives: {
-    focus: {
-      // định nghĩa cho directive
-      inserted: function (el) {
-        el.focus();
-      },
-    },
-  },
+  // directives: {
+  //   focus: {
+  //     // định nghĩa cho directive
+  //     inserted: function (el) {
+  //       el.focus();
+  //     },
+  //   },
+  // },
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
@@ -219,6 +219,15 @@ export default {
   color: red;
 }
 
+.info-item {
+  cursor: pointer;
+  margin-left: 14px;
+}
+
+.info-item:hover {
+  color: red;
+}
+
 .todo-item-left {
   display: flex;
   align-items: center;
@@ -263,6 +272,7 @@ button {
   font-size: 14px;
   background-color: white;
   appearance: none;
+  margin: 2px;
 }
 button:hover {
   background-color: lightgreen;
