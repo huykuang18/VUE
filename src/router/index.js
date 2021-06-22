@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Item from '../components/Item.vue'
+import TodoList from '../components/TodoList.vue'
 
 Vue.use(VueRouter)
 
 const routes = [{
+    path: "/",
+    name: "todo-list",
+    component: TodoList
+}, {
     path: '/task/:id',
     name: 'item',
     component: Item,

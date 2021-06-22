@@ -14,7 +14,7 @@
     >
       <todo-item
         v-for="(todo, index) in todosFiltered"
-        :key="todo.id" :todo="todo" :index="index" :checkAll="!anyRemaining"
+        :key="todo.id" :todo="todo" :index="index" :checkAll="anyRemaining"
         @removedTodo="removeTodo" @finishedEdit="finishedEdit"
       >
         <!-- <div class="todo-item-left">
@@ -43,13 +43,12 @@
 
     <div class="extra-container">
       <div>
-        <label
-          ><input
+        <label>
+          <input
             type="checkbox"
-            :checked="!anyRemaining"
-            @change="checkAllTodos"
-          />Chọn tất cả</label
-        >
+            :checked="anyRemaining"
+            @change="checkAllTodos">
+            Chọn tất cả</label>
       </div>
       <div>Còn {{ remaining }} mục cần làm</div>
     </div>
@@ -86,6 +85,7 @@
 
 <script>
 import TodoItem from './TodoItem.vue'
+import { mapGetters } from "vuex";
 
 export default {
   name: "todo-list",
@@ -94,45 +94,36 @@ export default {
   },
   data() {
     return {
-      newTodo: "",
-      idForTodo: 3,
-      beforeEditCache: "",
-      filter: "all",
-      todos: [
-        {
-          id: 1,
-          title: "Task 1",
-          completed: false,
-          editing: false,
-        },
-        {
-          id: 2,
-          title: "Task 2",
-          completed: false,
-          editing: false,
-        },
-      ],
+      newTodo: this.$store.state.newTodo,
+      idForTodo: this.$store.state.idForTodo,
+      beforeEditCache: this.$store.state.beforeEditCache,
+      filter: this.$store.state.filter,
+      editing: this.$store.state.editing,
+      todos: this.$store.state.todos
     };
   },
   computed: {
+    ...mapGetters({
+      todosList: "todos"
+    }),
     remaining() {
-      return this.todos.filter((todo) => !todo.completed).length;
+      return this.$store.getters.remain
     },
     anyRemaining() {
-      return this.remaining != 0;
+      return this.remaining === 0;
     },
     todosFiltered() {
       if (this.filter == "all") {
-        return this.todos;
+        return this.todosList;
       } else if (this.filter == "active") {
-        return this.todos.filter((todo) => !todo.completed);
+        return this.todosList.filter(todo => !todo.completed);
       } else if (this.filter == "completed") {
-        return this.todos.filter((todo) => todo.completed);
+        return this.todosList.filter((todo) => todo.completed);
       }
-      return this.todos;
+      return this.todosList;
     },
     showClearCompletedButton() {
-      return this.todos.filter((todo) => todo.completed).length > 0;
+      return this.$store.getters.showButton
     },
   },
   // directives: {
@@ -145,18 +136,7 @@ export default {
   // },
   methods: {
     addTodo() {
-      if (this.newTodo.trim().length == 0) {
-        return;
-      }
-
-      this.todos.push({
-        id: this.idForTodo,
-        title: this.newTodo,
-        completed: false,
-      });
-
-      this.newTodo = "";
-      this.idForTodo++;
+      this.$store.dispatch('add', this.newTodo)
     },
     // editTodo(todo) {
     //   this.beforeEditCache = todo.title;
@@ -172,17 +152,17 @@ export default {
     //   todo.title = this.beforeEditCache;
     //   todo.editing = false;
     // },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
+    removeTodo(item) {
+      this.$store.dispatch('remove', item)
     },
     checkAllTodos() {
-      this.todos.forEach((todo) => (todo.completed = event.target.checked));
+      this.$store.dispatch('checkAll','')
     },
     clearCompleted() {
-      this.todos = this.todos.filter((todo) => !todo.completed);
+      this.$store.dispatch('clear','')
     },
     finishedEdit(data){
-      this.todos.splice(data.index, 1, data.todo)
+      this.$store.dispatch('finishedEdit', data)
     }
   },
 };
@@ -212,7 +192,7 @@ export default {
 
 .remove-item {
   cursor: pointer;
-  margin-left: 14px;
+  margin-left: 15px;
 }
 
 .remove-item:hover {
@@ -221,11 +201,15 @@ export default {
 
 .info-item {
   cursor: pointer;
-  margin-left: 14px;
+  border: black 1px solid;
+  color: black;
+  padding: 5px;
+  text-decoration: none;
+  margin-left: 100px;
 }
 
 .info-item:hover {
-  color: red;
+  background: lightgreen;
 }
 
 .todo-item-left {

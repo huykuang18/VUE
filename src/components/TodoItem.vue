@@ -21,7 +21,7 @@
         @keyup.esc="cancelEdit"
       />
     </div>
-    <router-link class="infor-item" :to="{name: 'item', params: {id: id}}">Chi tiết</router-link>
+    <router-link class="info-item" :to="{name: 'item', params: {id: id}}">Chi tiết</router-link>
     <div class="remove-item" @click="removeTodo(index)">&times;</div>
   </div>
 </template>
@@ -53,14 +53,12 @@ export default {
     };
   },
   watch: {
-    checkAll() {
-      // if (this.checkAll) {
-      //     this.completed = true
-      // } else {
-      //     this.completed = this.todo.completed
-      // }
-      this.completed = this.checkAll ? true : this.todo.completed;
-    },
+    todo: {
+      handler: function(val){
+        this.completed = val.completed;
+      },
+      deep: true
+    }
   },
   directives: {
     focus: {
