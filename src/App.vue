@@ -1,19 +1,15 @@
 <template>
   <div id="app" class="container">
-    <img alt="Vue logo" src="./assets/logo.png" class="logo">
-    <h1>TO DO LIST</h1>
-    <todo-list></todo-list>
+    <router-link to="/"><img alt="Vue logo" src="./assets/logo.png" class="logo"></router-link>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import TodoList from './components/TodoList.vue'
 
 export default {
   name: 'App',
   components: {
-    TodoList
   }
 }
 </script>
