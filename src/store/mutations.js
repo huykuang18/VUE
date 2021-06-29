@@ -32,5 +32,8 @@ export default {
     getItem(state, idItem) {
         let item = state.todos.filter(todo => String(todo.id) === String(idItem));
         if (item[0]) state.item = item[0];
-    }
+    },
+    setAuthenticated(state, status) {
+        state.authenticated = status;
+    },
 }
