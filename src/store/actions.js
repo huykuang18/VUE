@@ -20,5 +20,5 @@ export default {
     fetchItem({ commit }, idItem) {
         // TODO get api item
         commit("getItem", idItem);
-    }
+    },
 }

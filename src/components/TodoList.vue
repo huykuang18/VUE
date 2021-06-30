@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div>
+      Hello, <b>{{account}}</b>!
+      <button class="btn" @click="logout">Thoát</button>
+    </div>
+
     <input
       type="text"
       class="todo-input"
@@ -14,8 +19,12 @@
     >
       <todo-item
         v-for="(todo, index) in todosFiltered"
-        :key="todo.id" :todo="todo" :index="index" :checkAll="anyRemaining"
-        @removedTodo="removeTodo" @finishedEdit="finishedEdit"
+        :key="todo.id"
+        :todo="todo"
+        :index="index"
+        :checkAll="anyRemaining"
+        @removedTodo="removeTodo"
+        @finishedEdit="finishedEdit"
       >
         <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
@@ -47,8 +56,10 @@
           <input
             type="checkbox"
             :checked="anyRemaining"
-            @change="checkAllTodos">
-            Chọn tất cả</label>
+            @change="checkAllTodos"
+          />
+          Chọn tất cả</label
+        >
       </div>
       <div>Còn {{ remaining }} mục cần làm</div>
     </div>
@@ -84,7 +95,7 @@
 </template>
 
 <script>
-import TodoItem from './TodoItem.vue'
+import TodoItem from "./TodoItem.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -99,15 +110,21 @@ export default {
       beforeEditCache: this.$store.state.beforeEditCache,
       filter: this.$store.state.filter,
       editing: this.$store.state.editing,
-      todos: this.$store.state.todos
+      todos: this.$store.state.todos,
+      account: sessionStorage.user
     };
+  },
+  mounted() {
+    if (this.authenticated) {
+      this.$router.replace({ name: "login" });
+    }
   },
   computed: {
     ...mapGetters({
-      todosList: "todos"
+      todosList: "todos",
     }),
     remaining() {
-      return this.$store.getters.remain
+      return this.$store.getters.remain;
     },
     anyRemaining() {
       return this.remaining === 0;
@@ -116,14 +133,14 @@ export default {
       if (this.filter == "all") {
         return this.todosList;
       } else if (this.filter == "active") {
-        return this.todosList.filter(todo => !todo.completed);
+        return this.todosList.filter((todo) => !todo.completed);
       } else if (this.filter == "completed") {
         return this.todosList.filter((todo) => todo.completed);
       }
       return this.todosList;
     },
     showClearCompletedButton() {
-      return this.$store.getters.showButton
+      return this.$store.getters.showButton;
     },
   },
   // directives: {
@@ -136,7 +153,7 @@ export default {
   // },
   methods: {
     addTodo() {
-      this.$store.dispatch('add', this.newTodo)
+      this.$store.dispatch("add", this.newTodo);
     },
     // editTodo(todo) {
     //   this.beforeEditCache = todo.title;
@@ -153,16 +170,20 @@ export default {
     //   todo.editing = false;
     // },
     removeTodo(item) {
-      this.$store.dispatch('remove', item)
+      this.$store.dispatch("remove", item);
     },
     checkAllTodos() {
-      this.$store.dispatch('checkAll','')
+      this.$store.dispatch("checkAll", "");
     },
     clearCompleted() {
-      this.$store.dispatch('clear','')
+      this.$store.dispatch("clear", "");
     },
-    finishedEdit(data){
-      this.$store.dispatch('finishedEdit', data)
+    finishedEdit(data) {
+      this.$store.dispatch("finishedEdit", data);
+    },
+    logout() {
+      sessionStorage.removeItem('user');
+      this.$router.replace({name: 'login'});
     }
   },
 };
@@ -256,7 +277,8 @@ button {
   font-size: 14px;
   background-color: white;
   appearance: none;
-  margin: 2px;
+  margin: 5px;
+  cursor: pointer;
 }
 button:hover {
   background-color: lightgreen;

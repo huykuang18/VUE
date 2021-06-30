@@ -8,6 +8,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        users: [{
+                email: "nqh.rma@gmail.com",
+                password: "123456"
+            },
+            {
+                email: "nqh@gmail.com",
+                password: "123456"
+            },
+            {
+                email: "ptu@gmail.com",
+                password: "123456"
+            },
+        ],
         todos: [{
                 id: 1,
                 title: "Task 1",

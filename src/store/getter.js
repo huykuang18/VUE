@@ -8,9 +8,7 @@ export default {
     remain: (state) => {
         return state.todos.filter((todo) => !todo.completed).length
     },
-    anyRemain: (state) => {
-        return state.remain != 0
-    },
     todos: (state) => state.todos,
-    item: state => state.item
+    item: state => state.item,
+    users: state => state.users,
 }
